@@ -1,0 +1,8 @@
+# Linguist — estatísticas de linguagem no GitHub
+# https://github.com/github-linguist/linguist/blob/main/docs/overrides.md
+
+docs/** linguist-documentation=true
+*.md linguist-documentation=true
+img/** linguist-vendored=true
+package-lock.json linguist-generated=true
+frontend/package-lock.json linguist-generated=true

@@ -1,0 +1,1 @@
+Ajusta linguist para destacar Java e adiciona badges Spring Boot no README.

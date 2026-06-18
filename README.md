@@ -1,5 +1,10 @@
 # UST Gov
 
+[![Java](https://img.shields.io/badge/Java-21-orange?logo=openjdk)](https://openjdk.org/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5-brightgreen?logo=springboot)](https://spring.io/projects/spring-boot)
+[![Vue.js](https://img.shields.io/badge/Vue.js-3-42b883?logo=vuedotjs)](https://vuejs.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-336791?logo=postgresql)](https://www.postgresql.org/)
+
 Sistema web para **simulação de esforço e custo em UST** (Unidade de Serviço Técnico), voltado a órgãos governamentais. Permite montagem de squads, cálculo por **FCP** (Fator de Complexidade Profissional), gestão de projetos e sustentações, dashboard executivo, visualização de relatórios em tela e exportação PDF/Excel.
 
 ---
