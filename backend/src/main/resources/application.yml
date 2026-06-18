@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: ust-calculator
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: America/Sao_Paulo
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:ust-gov-calculator-jwt-secret-key-min-256-bits-required-for-hs256-algorithm}
+    expiration-ms: 86400000
+  reports:
+    storage-path: ${REPORTS_STORAGE_PATH:./storage/relatorios}
+  branding:
+    storage-path: ${BRANDING_STORAGE_PATH:./storage/branding}
+  mail:
+    enabled: ${MAIL_ENABLED:true}
+    from: ${MAIL_FROM:UST Gov <noreply@ust.gov.br>}
+    mailpit-ui-url: ${MAILPIT_UI_URL:http://localhost:8025}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method

@@ -1,0 +1,41 @@
+# Desenvolvimento local — PostgreSQL + Mailpit
+# Uso: docker compose -f docker-compose.dev.yml up -d
+# Backend: mvn spring-boot:run (perfil dev)
+# Frontend: npm run dev
+# Mailpit UI: http://localhost:8025
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: ust-postgres-dev
+    environment:
+      POSTGRES_DB: ust_calculator
+      POSTGRES_USER: ust_user
+      POSTGRES_PASSWORD: ust_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ust_user -d ust_calculator"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - default
+      - ust-network
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: ust-mailpit-dev
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+volumes:
+  postgres_data_dev:
+
+networks:
+  ust-network:
+    external: true
+    name: calculadoragov_ust-network

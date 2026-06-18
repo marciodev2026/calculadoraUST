@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: ust-postgres
+    environment:
+      POSTGRES_DB: ust_calculator
+      POSTGRES_USER: ust_user
+      POSTGRES_PASSWORD: ust_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ust_user -d ust_calculator"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      default:
+      ust-network:
+        aliases:
+          - postgres
+
+  flyway:
+    image: flyway/flyway:10-alpine
+    container_name: ust-flyway
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend/src/main/resources/db/migration:/flyway/sql
+    command: >
+      -url=jdbc:postgresql://postgres:5432/ust_calculator
+      -user=ust_user
+      -password=ust_pass
+      -connectRetries=10
+      migrate
+
+volumes:
+  postgres_data:
+
+networks:
+  ust-network:
+    external: true
+    name: calculadoragov_ust-network

@@ -1,0 +1,91 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: ust-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-ust_calculator}
+      POSTGRES_USER: ${DB_USER:-ust_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-ust_pass}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-ust_user} -d ${DB_NAME:-ust_calculator}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - ust-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    container_name: ust-backend
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-ust_calculator}
+      DB_USER: ${DB_USER:-ust_user}
+      DB_PASSWORD: ${DB_PASSWORD:-ust_pass}
+      JWT_SECRET: ${JWT_SECRET:-ust-gov-calculator-jwt-secret-key-min-256-bits-required-for-hs256-algorithm}
+      REPORTS_STORAGE_PATH: /app/storage/relatorios
+      BRANDING_STORAGE_PATH: /app/storage/branding
+      MAIL_HOST: mailpit
+      MAIL_PORT: 1025
+      MAILPIT_UI_URL: http://localhost:8025
+    volumes:
+      - reports_data:/app/storage/relatorios
+      - branding_data:/app/storage/branding
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+    networks:
+      - ust-network
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: ust-mailpit
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - ust-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+    container_name: ust-frontend
+    restart: unless-stopped
+    networks:
+      - ust-network
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: ust-nginx
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-80}:80"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - ust-network
+
+volumes:
+  postgres_data:
+  reports_data:
+  branding_data:
+
+networks:
+  ust-network:
+    driver: bridge

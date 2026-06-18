@@ -1,0 +1,2 @@
+-- Init opcional do PostgreSQL
+-- As migrations Flyway são executadas automaticamente pelo backend na inicialização.

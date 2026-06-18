@@ -1,0 +1,41 @@
+# Dependencies
+node_modules/
+dist/
+
+# Build
+backend/target/
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# H2 local (dev sem Docker)
+backend/data/
+
+# Reports storage
+storage/
+reports/
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+
+# Mailpit binary (baixar via scripts/start-mailpit.ps1)
+scripts/mailpit.exe
