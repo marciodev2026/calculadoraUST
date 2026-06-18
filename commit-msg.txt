@@ -1,1 +1,1 @@
-Ajusta linguist para destacar Java e adiciona badges Spring Boot no README.
+Atualiza README para recalcular estatisticas do GitHub.
